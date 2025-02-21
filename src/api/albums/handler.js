@@ -5,6 +5,7 @@ class AlbumsHandler {
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
+    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
   }
 
   async postAlbumHandler(request, h) {
@@ -31,6 +32,17 @@ class AlbumsHandler {
       data: {
         album,
       },
+    };
+  }
+
+  async putAlbumByIdHandler(request) {
+    this._validator.validateAlbumPayload(request.payload);
+    const { id } = request.params;
+
+    await this._service.editAlbumById(id, request.payload);
+    return {
+      status: 'success',
+      message: 'Album berhasil diperbarui',
     };
   }
 }
