@@ -7,6 +7,7 @@ class SongsHandler {
     this.getSongByIdHandler = this.getSongByIdHandler.bind(this);
     this.putSongByIdHandler = this.putSongByIdHandler.bind(this);
     this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
+    this.getSongsHandler = this.getSongsHandler.bind(this);
   }
 
   async postSongHandler(request, h) {
@@ -21,6 +22,17 @@ class SongsHandler {
 
     response.code(201);
     return response;
+  }
+
+  async getSongsHandler() {
+    const songs = await this._service.getSongs();
+
+    return {
+      status: 'success',
+      data: {
+        songs,
+      },
+    };
   }
 
   async getSongByIdHandler(request) {

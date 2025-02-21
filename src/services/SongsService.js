@@ -30,6 +30,11 @@ class SongsService {
     return result.rows[0].id;
   }
 
+  async getSongs() {
+    const result = await this._pool.query('SELECT id,title,performer FROM songs');
+    return result.rows;
+  }
+
   async getSongById(id) {
     const query = {
       text: 'SELECT id,title,year,performer,genre,duration,"albumId" FROM songs WHERE id = $1',
