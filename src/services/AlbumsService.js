@@ -24,17 +24,22 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const query = {
-      text: 'SELECT id,name,year FROM albums WHERE id = $1',
-      values: [id],
-    };
+    try {
+      const query = {
+        text: 'SELECT a.id,a.name,a.year, COALESCE(json_agg(json_build_object(\'id\', s.id, \'title\', s.title, \'performer\', s.performer)) FILTER (WHERE s.id IS NOT NULL), \'[]\'::json) AS Songs FROM albums a LEFT JOIN songs s ON a.id = s."albumId" WHERE a.id = $1 GROUP BY a.id,a.name,a.year',
+        values: [id],
+      };
 
-    const result = await this._pool.query(query);
+      const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+      if (!result.rows.length) {
+        throw new NotFoundError('Album tidak ditemukan');
+      }
+      return result.rows[0];
+    } catch (err) {
+      console.log(err);
       throw new NotFoundError('Album tidak ditemukan');
     }
-    return result.rows[0];
   }
 
   async editAlbumById(id, { name, year }) {
