@@ -1,4 +1,5 @@
 require('dotenv').config();
+const Jwt = require('@hapi/jwt');
 
 const Hapi = require('@hapi/hapi');
 const albums = require('./api/albums');
@@ -43,6 +44,28 @@ const init = async () => {
 
   await server.register([
     {
+      plugin: Jwt,
+    },
+  ]);
+
+  server.auth.strategy('playlistsapp_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
+  });
+
+  await server.register([
+    {
       plugin: albums,
       options: {
         service: albumsService,
@@ -83,6 +106,7 @@ const init = async () => {
       plugin: playlistSongs,
       options: {
         playlistSongsService,
+        playlistsService,
         songsService,
         validator: PlaylistSongsValidator,
       },

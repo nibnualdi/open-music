@@ -3,6 +3,9 @@ const routes = (handler) => [
     method: 'POST',
     path: '/playlists',
     handler: handler.postPlaylistHandler,
+    options: {
+      auth: 'playlistsapp_jwt',
+    },
   },
   {
     method: 'GET',
@@ -13,6 +16,9 @@ const routes = (handler) => [
     method: 'DELETE',
     path: '/playlists/{id}',
     handler: handler.deletePlaylistByIdHandler,
+    options: {
+      auth: 'playlistsapp_jwt',
+    },
   },
 ];
 
