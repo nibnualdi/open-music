@@ -11,6 +11,9 @@ const routes = (handler) => [
     method: 'GET',
     path: '/playlists',
     handler: handler.getPlaylistsHandler,
+    options: {
+      auth: 'playlistsapp_jwt',
+    },
   },
   {
     method: 'DELETE',
