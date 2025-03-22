@@ -1,7 +1,11 @@
 require('dotenv').config();
 const Jwt = require('@hapi/jwt');
-
 const Hapi = require('@hapi/hapi');
+
+const _exports = require('./api/exports');
+const ProducerService = require('./services/ProducerService');
+const ExportsValidator = require('./validator/exports');
+
 const albums = require('./api/albums');
 const songs = require('./api/songs');
 const users = require('./api/users');
@@ -133,6 +137,14 @@ const init = async () => {
       options: {
         service: playlistActivitesService,
         playlistsService,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        service: ProducerService,
+        playlistsService,
+        validator: ExportsValidator,
       },
     },
   ]);
