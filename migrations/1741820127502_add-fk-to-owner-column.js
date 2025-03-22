@@ -20,7 +20,7 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-  pgm.dropConstraint('notes', 'fk_playlists.owner_user_id');
+  pgm.dropConstraint('playlists', 'fk_playlists.owner_user_id');
   pgm.sql("UPDATE playlists SET owner = NULL WHERE owner = 'old_playlist'");
   pgm.sql("DELETE FROM users WHERE id = 'old_playlist'");
 };
